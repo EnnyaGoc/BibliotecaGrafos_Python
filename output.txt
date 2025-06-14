@@ -1,0 +1,4 @@
+Vertices: 5
+Arestas: 5
+Grau Medio: 2.0
+Distribuicao do Grau: {2: 5}
