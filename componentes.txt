@@ -1,0 +1,3 @@
+Numero de componentes conexas: 1
+
+Componente 1 (tamanho 5): [1, 2, 3, 4, 5]

@@ -1,19 +1,21 @@
 from graph import Graph
 def main():
-    g = Graph(5)
+    g = Graph(5, representation="adjacency_list")
     g.read_graph("input.txt")
 
-    g.write_graph_info("output.txt")
+    # informacoes gerais
+    g.write_graph_info("info.txt")
 
-    parent,level = g.bfs(1)
-    print("BFS - Pais:", parent)
-    print("BFS - Niveis:", level)
+    # busca em largura (BFS)
+    pais_bfs, niveis_bfs = g.bfs(start=1)
+    g.write_search_tree(pais_bfs, niveis_bfs, "bfs.txt")
 
-    parent = g.dfs(1)
-    print("DFS - Pais:", parent)
+    # busca em profundidade (DFS)
+    pais_dfs = g.dfs(start=1)
+    g.write_search_tree(pais_dfs, {v: -1 for v in pais_dfs}, "dfs.txt") 
 
-    components = g.connected_components()
-    print("Componentes conexos: ", components)
+    # componentes conexos
+    g.write_components("componentes.txt")
 
 
 if __name__ == "__main__":
