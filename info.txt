@@ -1,5 +1,6 @@
-Vertices: 5
-Arestas: 5
-Grau Medio: 2.00
+Vertices: 8
+Arestas: 6
+Grau Medio: 1.50
 Distribuicao do Grau:
-2: 5
+0: 2
+2: 6
