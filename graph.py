@@ -33,16 +33,6 @@ class Graph:
             self.adjacency_matrix[u-1][v-1] = 1
             self.adjacency_matrix[v-1][u-1] = 1
 
-    def write_graph_info(self, file_path):
-        grau_medio, distribuicao = self.calculate_degree_info()
-        with open(file_path, 'w') as f:
-            f.write(f"Vertices: {self.num_vertices}\n")
-            f.write(f"Arestas: {self.calculate_edges()}\n")
-            f.write(f"Grau Medio: {grau_medio:.2f}\n")
-            f.write(f"Distribuicao do Grau:\n")
-            for grau in sorted(distribuicao):
-                f.write(f"{grau}: {distribuicao[grau]}\n")
-
     def calculate_edges(self):
         if self.representation == "adjacency_list":
             return sum(len(v) for v in self.adjacency_list.values()) // 2
@@ -73,6 +63,15 @@ class Graph:
 
         return grau_medio, distribuicao
 
+    def write_graph_info(self, file_path):
+        grau_medio, distribuicao = self.calculate_degree_info()
+        with open(file_path, 'w') as f:
+            f.write(f"Vertices: {self.num_vertices}\n")
+            f.write(f"Arestas: {self.calculate_edges()}\n")
+            f.write(f"Grau Medio: {grau_medio:.2f}\n")
+            f.write(f"Distribuicao do Grau:\n")
+            for grau in sorted(distribuicao):
+                f.write(f"{grau}: {distribuicao[grau]}\n")
 
     def bfs(self, start):
         visited = {v: False for v in range(1, self.num_vertices + 1)}
@@ -114,15 +113,6 @@ class Graph:
                 parent[v] = u
                 self._dfs_recursive(v, visited, parent)
 
-    def write_search_tree(self, parent, level, file_path):
-        with open(file_path, 'w') as f:
-            f.write("Pai de cada vertice:\n")
-            for v in sorted(parent):
-                f.write(f"{v}: {parent[v]}\n")
-            f.write("\nNivel de cada vertice:\n")
-            for v in sorted(level):
-                f.write(f"{v}: {level[v]}\n")
-
     def connected_components(self):
         visited = {v: False for v in range(1, self.num_vertices + 1)}
         components = []
@@ -145,6 +135,15 @@ class Graph:
         for v in neighbors:
             if not visited[v]:
                 self._dfs_component(v, visited, comp)
+
+    def write_search_tree(self, parent, level, file_path):
+        with open(file_path, 'w') as f:
+            f.write("Pai de cada vertice:\n")
+            for v in sorted(parent):
+                f.write(f"{v}: {parent[v]}\n")
+            f.write("\nNivel de cada vertice:\n")
+            for v in sorted(level):
+                f.write(f"{v}: {level[v]}\n")
 
     def write_components(self, file_path):
             components = self.connected_components()
