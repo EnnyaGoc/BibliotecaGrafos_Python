@@ -2,18 +2,18 @@ Pai de cada vertice:
 1: None
 2: 1
 3: 1
-4: None
-5: None
-6: None
-7: None
-8: None
+4: 1
+5: 2
+6: 3
+7: 4
+8: 5
 
 Nivel de cada vertice:
 1: 0
 2: 1
 3: 1
-4: -1
-5: -1
-6: -1
-7: -1
-8: -1
+4: 1
+5: 2
+6: 2
+7: 2
+8: 3

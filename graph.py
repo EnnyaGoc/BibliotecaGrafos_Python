@@ -1,4 +1,5 @@
 from collections import deque
+import heapq
 
 class Graph:
     def __init__(self, num_vertices, representation="adjacency_list"):
@@ -22,16 +23,18 @@ class Graph:
             self.adjacency_matrix = [[0] * self.num_vertices for _ in range(self.num_vertices)]
 
         for line in lines[1:]:
-            u, v = map(int, line.strip().split())
-            self.add_edge(u, v)
+            parts = line.strip().split()
+            u, v = int(parts[0]), int(parts[1])
+            weight = float(parts[2]) if len(parts) == 3 else 1.0
+            self.add_edge(u, v, weight)
 
-    def add_edge(self, u, v):
+    def add_edge(self, u, v, weight=1):
         if self.representation == "adjacency_list":
-            self.adjacency_list[u].append(v)
-            self.adjacency_list[v].append(u)
+            self.adjacency_list[u].append((v, weight))
+            self.adjacency_list[v].append((u, weight))
         elif self.representation == "adjacency_matrix":
-            self.adjacency_matrix[u-1][v-1] = 1
-            self.adjacency_matrix[v-1][u-1] = 1
+            self.adjacency_matrix[u-1][v-1] = weight
+            self.adjacency_matrix[v-1][u-1] = weight
 
     def calculate_edges(self):
         if self.representation == "adjacency_list":
@@ -84,9 +87,10 @@ class Graph:
 
         while queue:
             u = queue.popleft()
-            neighbors = self.adjacency_list[u] if self.representation == "adjacency_list" else [
-                v + 1 for v in range(self.num_vertices) if self.adjacency_matrix[u-1][v] == 1
-            ]
+            neighbors = (
+                [v for v, _ in self.adjacency_list[u]] if self.representation == "adjacency_list"
+                else [v + 1 for v in range(self.num_vertices) if self.adjacency_matrix[u-1][v] != 0]
+            )
 
             for v in neighbors:
                 if not visited[v]:
@@ -105,9 +109,10 @@ class Graph:
 
     def _dfs_recursive(self, u, visited, parent):
         visited[u] = True
-        neighbors = self.adjacency_list[u] if self.representation == "adjacency_list" else [
-            v + 1 for v in range(self.num_vertices) if self.adjacency_matrix[u-1][v] == 1
-        ]
+        neighbors = (
+            [v for v, _ in self.adjacency_list[u]] if self.representation == "adjacency_list"
+            else [v + 1 for v in range(self.num_vertices) if self.adjacency_matrix[u-1][v] != 0]
+        )
         for v in neighbors:
             if not visited[v]:
                 parent[v] = u
@@ -129,9 +134,10 @@ class Graph:
         visited[u] = True
         comp.append(u)
 
-        neighbors = self.adjacency_list[u] if self.representation == "adjacency_list" else [
-            v + 1 for v in range(self.num_vertices) if self.adjacency_matrix[u-1][v] == 1
-        ]
+        neighbors = (
+            [v for v, _ in self.adjacency_list[u]] if self.representation == "adjacency_list"
+            else [v + 1 for v in range(self.num_vertices) if self.adjacency_matrix[u-1][v] != 0]
+        )
         for v in neighbors:
             if not visited[v]:
                 self._dfs_component(v, visited, comp)
@@ -153,3 +159,43 @@ class Graph:
                 f.write(f"Numero de componentes conexas: {len(components)}\n\n")
                 for i, comp in enumerate(components, 1):
                     f.write(f"Componente {i} (tamanho {len(comp)}): {sorted(comp)}\n")
+
+
+    def dijkstra(self, start):
+        distances = {v: float('inf') for v in range(1, self.num_vertices + 1)}
+        previous = {v: None for v in range(1, self.num_vertices + 1)}
+        distances[start] = 0
+
+        queue = [(0, start)]
+
+        while queue:
+            current_distance, u = heapq.heappop(queue)
+
+            if current_distance > distances[u]:
+                continue
+
+            neighbors = (
+                self.adjacency_list[u] if self.representation == "adjacency_list"
+                else [(v+1, self.adjacency_matrix[u-1][v]) for v in range(self.num_vertices) if self.adjacency_matrix[u-1][v] != 0]
+            )
+
+            for v, weight in neighbors:
+                distance = current_distance + weight
+                if distance < distances[v]:
+                    distances[v] = distance
+                    previous[v] = u
+                    heapq.heappush(queue, (distance, v))
+
+        return distances, previous
+
+
+    def shortest_path(self, start, end):
+        distances, previous = self.dijkstra(start)
+        path = []
+        current = end
+
+        while current is not None:
+            path.insert(0, current)
+            current = previous[current]
+
+        return path, distances[end]
