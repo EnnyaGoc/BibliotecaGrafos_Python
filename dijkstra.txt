@@ -1,6 +1,6 @@
-Caminho mínimo de 1 até 8: [1, 4, 7, 8] com distância 6.5
+Caminho minimo de 1 ate 8: [1, 4, 7, 8] com distancia 6.5
 
-Distâncias do vértice 1 para todos os outros vértices:
+Distancias do vertice 1 para todos os outros vertices:
 1 -> 1: 0
 1 -> 2: 3.0
 1 -> 3: 1.5

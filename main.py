@@ -24,8 +24,8 @@ def main():
     distancias, _ = g.dijkstra(origem)
 
     with open("dijkstra.txt", "w") as f:
-        f.write(f"Caminho mínimo de {origem} até {destino}: {caminho} com distância {distancia}\n\n")
-        f.write(f"Distâncias do vértice {origem} para todos os outros vértices:\n")
+        f.write(f"Caminho minimo de {origem} ate {destino}: {caminho} com distancia {distancia}\n\n")
+        f.write(f"Distancias do vertice {origem} para todos os outros vertices:\n")
         for v, d in distancias.items():
             f.write(f"{origem} -> {v}: {d}\n")
     print("Arquivo dijkstra.txt gerado com os resultados do Dijkstra.")
